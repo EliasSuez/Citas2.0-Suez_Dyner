@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './Formulario.css';
 
-function Formulario() {
+function Formulario({ setCitas, citas }) {
   const [form, setForm] = useState({
     mascota: '',
     duenio: '',
@@ -10,7 +10,7 @@ function Formulario() {
     sintomas: ''
   });
 
-  const Changes = (e) => {
+  const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -19,7 +19,28 @@ function Formulario() {
 
   const submit = (e) => {
     e.preventDefault();
-    console.log(form);  
+
+    if (
+      !form.mascota.trim() ||
+      !form.duenio.trim() ||
+      !form.fecha.trim() ||
+      !form.hora.trim() ||
+      !form.sintomas.trim()
+    ) {
+      alert('Todos los campos son obligatorios');
+      return;
+    }
+
+    const confirmar = window.confirm('¿Deseás agregar esta cita?');
+    if (!confirmar) return;
+
+    const nuevaCita = {
+      ...form,
+      id: Date.now()
+    };
+
+    setCitas([...citas, nuevaCita]);
+
     setForm({
       mascota: '',
       duenio: '',
@@ -40,40 +61,45 @@ function Formulario() {
           className="u-full-width"
           placeholder="Nombre Mascota"
           value={form.mascota}
-          onChange={Changes}
+          onChange={handleChange}
         />
+
         <label>Nombre Dueño</label>
         <input
           type="text"
-          name="duenio"  
+          name="duenio"
           className="u-full-width"
           placeholder="Nombre dueño de la mascota"
           value={form.duenio}
-          onChange={Changes}
+          onChange={handleChange}
         />
+
         <label>Fecha</label>
         <input
           type="date"
           name="fecha"
           className="u-full-width"
           value={form.fecha}
-          onChange={Changes}
+          onChange={handleChange}
         />
+
         <label>Hora</label>
         <input
           type="time"
           name="hora"
           className="u-full-width"
           value={form.hora}
-          onChange={Changes}
+          onChange={handleChange}
         />
-        <label>Sintomas</label>
+
+        <label>Síntomas</label>
         <textarea
           name="sintomas"
-          value={form.sintomas}
           className="u-full-width"
-          onChange={Changes}
+          value={form.sintomas}
+          onChange={handleChange}
         ></textarea>
+
         <button type="submit" className="u-full-width button-primary">
           Agregar Cita
         </button>
